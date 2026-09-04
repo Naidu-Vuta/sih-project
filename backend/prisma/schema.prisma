@@ -1,10 +1,39 @@
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 generator client {
   provider = "prisma-client-js"
+}
+
+enum Role {
+  CUSTOMER
+  WORKER
+  ADMIN
+}
+
+enum BookingStatus {
+  REQUESTED
+  ACCEPTED
+  ON_THE_WAY
+  ARRIVED
+  IN_PROGRESS
+  COMPLETED
+  PAID
+  REVIEWED
+  REJECTED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+}
+
+enum PriceType {
+  FIXED
+  HOURLY
 }
 
 model User {
@@ -13,7 +42,7 @@ model User {
   passwordHash       String
   name               String
   phone              String?
-  role               String           @default("CUSTOMER") // "CUSTOMER" | "WORKER" | "ADMIN"
+  role               Role             @default(CUSTOMER)
   avatarUrl          String?
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt
@@ -42,7 +71,7 @@ model WorkerProfile {
   id                 String   @id @default(uuid())
   userId             String   @unique
   bio                String?
-  skills             String   // e.g. "Residential Wiring, Circuit Breaker, Appliance Repair"
+  skills             String
   hourlyRate         Float    @default(300.0)
   experienceYears    Int      @default(2)
   isAvailable        Boolean  @default(true)
@@ -54,16 +83,13 @@ model WorkerProfile {
   payoutTotal        Float    @default(0.0)
   coopDividendEarned Float    @default(0.0)
   city               String?  @default("Bengaluru")
-  
-  // Enhanced worker profile fields:
   certifications     String?  @default("Govt Certified Skill Craftsperson, Cooperative Safety Trained")
   serviceArea        String?  @default("Indiranagar, Koramangala, HSR Layout, Whitefield, Bellandur")
   workingDays        String?  @default("Mon,Tue,Wed,Thu,Fri,Sat")
   workingHours       String?  @default("08:00 AM - 07:00 PM")
-  unavailableDates   String?  @default("") // Comma-separated YYYY-MM-DD
+  unavailableDates   String?  @default("")
   languages          String?  @default("English, Hindi, Kannada")
-  distanceKm         Float?   @default(2.5) // Distance from searcher / center
-
+  distanceKm         Float?   @default(2.5)
   user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
@@ -84,7 +110,7 @@ model Notification {
   userId    String
   title     String
   message   String
-  type      String   @default("BOOKING_UPDATE") // "BOOKING_UPDATE" | "PAYMENT" | "SYSTEM"
+  type      String   @default("BOOKING_UPDATE")
   bookingId String?
   isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
@@ -97,7 +123,7 @@ model Category {
   name        String    @unique
   slug        String    @unique
   description String
-  icon        String    // Lucide icon identifier
+  icon        String
   services    Service[]
 }
 
@@ -107,7 +133,7 @@ model Service {
   title       String
   description String
   basePrice   Float
-  priceType   String    @default("FIXED") // "FIXED" | "HOURLY"
+  priceType   PriceType @default(FIXED)
   durationEst String
   imageUrl    String?
   category    Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
@@ -115,36 +141,33 @@ model Service {
 }
 
 model Booking {
-  id                String   @id @default(uuid())
-  bookingCode       String   @unique // Human-readable e.g. "BK-2026-7841"
+  id                String        @id @default(uuid())
+  bookingCode       String        @unique
   customerId        String
   workerId          String?
   serviceId         String
-  scheduledDate     String   // YYYY-MM-DD
-  timeSlot          String   // e.g. "09:00 AM - 11:00 AM"
+  scheduledDate     String
+  timeSlot          String
   address           String
-  city              String   @default("Bengaluru")
+  city              String        @default("Bengaluru")
   pincode           String?
   notes             String?
   jobDescription    String?
   serviceImage      String?
-  
-  // Status workflow: REQUESTED -> ACCEPTED -> ON_THE_WAY -> ARRIVED -> IN_PROGRESS -> COMPLETED -> PAID -> REVIEWED (or REJECTED, CANCELLED)
-  status            String   @default("REQUESTED")
-  paymentStatus     String   @default("PENDING") // PENDING, PAID
+  status            BookingStatus @default(REQUESTED)
+  paymentStatus     PaymentStatus @default(PENDING)
   paidAt            DateTime?
-  paymentMethod     String?  @default("PAY_ON_SERVICE")
-  
+  paymentMethod     String?       @default("PAY_ON_SERVICE")
   totalPrice        Float
-  platformFee       Float    // Cooperative 5% reserve fee
-  workerEarning     Float    // Direct fair wage (95%)
-  coopDividendShare Float    // Dividend allocated to worker member
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  platformFee       Float
+  workerEarning     Float
+  coopDividendShare Float
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
 
-  customer          User     @relation("CustomerBookings", fields: [customerId], references: [id], onDelete: Cascade)
-  worker            User?    @relation("WorkerBookings", fields: [workerId], references: [id], onDelete: SetNull)
-  service           Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  customer          User          @relation("CustomerBookings", fields: [customerId], references: [id], onDelete: Cascade)
+  worker            User?         @relation("WorkerBookings", fields: [workerId], references: [id], onDelete: SetNull)
+  service           Service       @relation(fields: [serviceId], references: [id], onDelete: Cascade)
   review            Review?
 }
 
@@ -153,7 +176,7 @@ model Review {
   bookingId  String   @unique
   customerId String
   workerId   String
-  rating     Int      // 1 to 5
+  rating     Int
   comment    String
   createdAt  DateTime @default(now())
 
