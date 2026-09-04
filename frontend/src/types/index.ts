@@ -209,6 +209,22 @@ export interface WorkerStats {
   isVerified: boolean;
 }
 
+/* Admin dashboard overview */
+export interface AdminOverview {
+  totalUsers: number;
+  totalCustomers: number;
+  totalWorkers: number;
+  totalAdmins: number;
+  totalBookings: number;
+  completedBookings: number;
+  pendingBookings: number;
+  totalRevenue: number;
+  totalWorkerEarnings: number;
+  totalCoopDividend: number;
+  recentBookings: Booking[];
+  recentUsers: User[];
+}
+
 export interface ApiResponse<T = any> {
   success: boolean;
   message?: string;

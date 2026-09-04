@@ -24,7 +24,7 @@ export const App: React.FC = () => {
     <AuthProvider>
       <Router>
         <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 font-['Plus_Jakarta_Sans',sans-serif]">
-          {/* Toast notifications */}
+
           <Toaster
             position="top-right"
             toastOptions={{
@@ -48,6 +48,7 @@ export const App: React.FC = () => {
 
           <main className="flex-1">
             <Routes>
+
               {/* Public Routes */}
               <Route path="/" element={<HomePage />} />
               <Route path="/services" element={<ServicesPage />} />
@@ -56,7 +57,7 @@ export const App: React.FC = () => {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
 
-              {/* Authenticated Customer Routes */}
+              {/* Customer Dashboard */}
               <Route
                 path="/customer/dashboard"
                 element={
@@ -66,7 +67,7 @@ export const App: React.FC = () => {
                 }
               />
 
-              {/* Authenticated Worker Routes */}
+              {/* Worker Dashboard */}
               <Route
                 path="/worker/dashboard"
                 element={
@@ -76,7 +77,7 @@ export const App: React.FC = () => {
                 }
               />
 
-              {/* Authenticated Admin Routes */}
+              {/* Admin Dashboard */}
               <Route
                 path="/admin/dashboard"
                 element={
@@ -87,7 +88,11 @@ export const App: React.FC = () => {
               />
 
               {/* Catch-all redirect */}
-              <Route path="*" element={<Navigate to="/" replace />} />
+              <Route
+                path="*"
+                element={<Navigate to="/" replace />}
+              />
+
             </Routes>
           </main>
 

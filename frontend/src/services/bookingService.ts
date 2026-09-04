@@ -13,7 +13,7 @@ export const bookingService = {
     notes?: string;
     jobDescription?: string;
     serviceImage?: string;
-  }): Promise<Booking> => {
+  }): Promise<Booking> {
     const res = await api.post<ApiResponse<Booking>>('/bookings', data);
     return res.data.data!;
   },
@@ -33,14 +33,22 @@ export const bookingService = {
     status: string,
     paymentMethod?: string
   ): Promise<Booking> {
-    const res = await api.patch<ApiResponse<Booking>>(`/bookings/${id}/status`, {
-      status,
-      paymentMethod,
-    });
+    const res = await api.patch<ApiResponse<Booking>>(
+      `/bookings/${id}/status`,
+      {
+        status,
+        paymentMethod,
+      }
+    );
+
     return res.data.data!;
   },
 
-  async submitReview(data: { bookingId: string; rating: number; comment: string }): Promise<any> {
+  async submitReview(data: {
+    bookingId: string;
+    rating: number;
+    comment: string;
+  }): Promise<any> {
     const res = await api.post<ApiResponse<any>>('/reviews', data);
     return res.data.data!;
   },
