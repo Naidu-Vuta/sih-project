@@ -1,0 +1,25 @@
+{
+  "name": "coop-gig-platform",
+  "version": "1.0.0",
+  "description": "Cooperative Gig Services Platform for Household & Community Services",
+  "private": true,
+  "scripts": {
+    "dev:backend": "npm.cmd --prefix backend run dev",
+    "dev:frontend": "npm.cmd --prefix frontend run dev",
+    "build": "npm.cmd --prefix backend run build && npm.cmd --prefix frontend run build",
+    "seed": "npm.cmd --prefix backend run seed",
+    "install:all": "npm.cmd --prefix backend install && npm.cmd --prefix frontend install"
+  },
+  "keywords": [
+    "cooperative",
+    "gig-economy",
+    "household-services",
+    "smart-india-hackathon",
+    "sih",
+    "react",
+    "express",
+    "prisma"
+  ],
+  "author": "Cooperative Tech Collective",
+  "license": "MIT"
+}
