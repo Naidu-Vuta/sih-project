@@ -51,12 +51,7 @@ export const getAdminOverview = async (req: AuthenticatedRequest, res: Response)
         totalFairWages,
         totalDividends,
       },
-      coopMetric: coopMetric || {
-        totalDividendDistributed: 45200.0,
-        communityWelfarePool: 82000.0,
-        totalFairWagesPaid: 384000.0,
-        workerMembersCount: verifiedWorkers,
-      },
+      coopMetric,
       recentBookings,
     });
   } catch (error: any) {

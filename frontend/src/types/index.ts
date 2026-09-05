@@ -209,20 +209,28 @@ export interface WorkerStats {
   isVerified: boolean;
 }
 
-/* Admin dashboard overview */
+export interface AdminCoopMetric {
+  totalDividendDistributed: number;
+  communityWelfarePool: number;
+  totalFairWagesPaid: number;
+  workerMembersCount: number;
+}
+
 export interface AdminOverview {
-  totalUsers: number;
-  totalCustomers: number;
-  totalWorkers: number;
-  totalAdmins: number;
-  totalBookings: number;
-  completedBookings: number;
-  pendingBookings: number;
-  totalRevenue: number;
-  totalWorkerEarnings: number;
-  totalCoopDividend: number;
+  kpis: {
+    totalWorkers: number;
+    verifiedWorkers: number;
+    pendingVerifications: number;
+    totalCustomers: number;
+    totalBookings: number;
+    completedBookings: number;
+    grossVolume: number;
+    platformFeeTotal: number;
+    totalFairWages: number;
+    totalDividends: number;
+  };
+  coopMetric: AdminCoopMetric | null;
   recentBookings: Booking[];
-  recentUsers: User[];
 }
 
 export interface ApiResponse<T = any> {
